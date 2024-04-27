@@ -6,6 +6,18 @@ import (
 	"net/http"
 )
 
+func formHandler(w http.ResponseWriter, r *http.Request) {
+	if err := r.ParseForm(); err != nil {
+		fmt.Fprintf(w, "Parseform() err: %v", err)
+		return
+	}
+	fmt.Fprint(w, "POST request successful")
+	name := r.FormValue("name")
+	address := r.FormValue("address")
+	fmt.Fprintf(w, "Name = %s\n", name)
+	fmt.Fprintf(w, "Address =%s\n", address)
+}
+
 func helloHandler(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/hello" {
 		http.Error(w, "404 not found", http.StatusNotFound)
@@ -14,7 +26,7 @@ func helloHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "GET" {
 		http.Error(w, "method is not supported", http.StatusNotFound)
 	}
-
+	fmt.Fprint(w, "hello!")
 }
 func main() {
 	fileServer := http.FileServer(http.Dir("./static"))
